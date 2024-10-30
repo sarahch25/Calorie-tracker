@@ -1,62 +1,28 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 public class CalorieTracker {
-    private ArrayList<FoodItem> foodItems;
-    private int dailyCalorieGoal;
-    private int dailyProteinGoal;  // Protein goal in grams
+    private int calorieGoal;
+    private int proteinGoal;
+    private int totalCalories;
+    private int totalProtein;
 
-    public CalorieTracker(int dailyCalorieGoal, int dailyProteinGoal) {
-        this.foodItems = new ArrayList<>();
-        this.dailyCalorieGoal = dailyCalorieGoal;
-        this.dailyProteinGoal = dailyProteinGoal;
+    public CalorieTracker(int calorieGoal, int proteinGoal) {
+        this.calorieGoal = calorieGoal;
+        this.proteinGoal = proteinGoal;
+        this.totalCalories = 0;
+        this.totalProtein = 0;
     }
 
-    public void addFoodItem(FoodItem item) {
-        foodItems.add(item);
+    // Adjusted method to add food item with quantity
+    public void addFoodItem(FoodItem item, int quantity) {
+        totalCalories += item.calculateCalories(quantity);
+        totalProtein += item.calculateProtein(quantity);
     }
 
-    public int getTotalCalories() {
-        int totalCalories = 0;
-        for (FoodItem item : foodItems) {
-            totalCalories += item.getCalories();
-        }
-        return totalCalories;
-    }
-
-    public int getTotalProtein() {
-        int totalProtein = 0;
-        for (FoodItem item : foodItems) {
-            totalProtein += item.getProtein();
-        }
-        return totalProtein;
-    }
-
-    public Map<String, Integer> getCaloriesByCategory() {
-        Map<String, Integer> categoryCalories = new HashMap<>();
-        for (FoodItem item : foodItems) {
-            categoryCalories.put(
-                    item.getCategory(),
-                    categoryCalories.getOrDefault(item.getCategory(), 0) + item.getCalories()
-            );
-        }
-        return categoryCalories;
-    }
-
+    // Existing methods to display totals
     public void displayTotalCalories() {
-        System.out.println("Total calories for the day: " + getTotalCalories());
-        System.out.println("Calories by category:");
-        for (Map.Entry<String, Integer> entry : getCaloriesByCategory().entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
-        }
+        System.out.printf("Total Calories Consumed: %d / %d%n", totalCalories, calorieGoal);
     }
 
     public void displayGoalsStatus() {
-        int caloriesLeft = dailyCalorieGoal - getTotalCalories();
-        int proteinLeft = dailyProteinGoal - getTotalProtein();
-
-        System.out.println("Calories remaining for the day: " + (caloriesLeft >= 0 ? caloriesLeft : 0));
-        System.out.println("Protein remaining for the day: " + (proteinLeft >= 0 ? proteinLeft : 0));
+        System.out.printf("Total Protein Consumed: %d / %d%n", totalProtein, proteinGoal);
     }
 }
